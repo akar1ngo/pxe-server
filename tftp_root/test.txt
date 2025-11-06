@@ -1,0 +1,12 @@
+Hello, TFTP World!
+
+This is a test file for the PXE server's TFTP functionality.
+
+It contains some sample text that can be retrieved by TFTP clients
+to verify that the server is working correctly.
+
+File size: This file is intentionally small for quick testing.
+Created for: PXE Server integration testing
+Protocol: TFTP (RFC 1350)
+
+End of test file.

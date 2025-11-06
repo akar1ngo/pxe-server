@@ -1,0 +1,8 @@
+.DS_Store
+.direnv/
+/target
+result*
+.env*
+# The folder is used for demonstration. Integration test references the test.txt
+tftp_root/*
+!tftp_root/test.txt
