@@ -5,9 +5,9 @@ use std::net::SocketAddr;
 use std::num::NonZeroU32;
 use std::time::Duration;
 
+use dhcp::packet::DhcpPacket;
+use dhcp::{DhcpOption, MessageType};
 use nix::net::if_::if_nametoindex;
-use pxe_server::dhcp::packet::DhcpPacket;
-use pxe_server::dhcp::{DhcpOption, MessageType};
 use socket2::{Domain, Protocol, Socket, Type};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

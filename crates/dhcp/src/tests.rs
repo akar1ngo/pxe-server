@@ -3,9 +3,9 @@ use std::time::Duration;
 
 use tokio::time::timeout;
 
-use crate::dhcp::packet::DhcpPacket;
-use crate::dhcp::server::{DhcpConfig, DhcpServer};
-use crate::dhcp::{DhcpOption, IpPool, MessageType, OpCode};
+use crate::packet::DhcpPacket;
+use crate::server::{DhcpConfig, DhcpServer};
+use crate::{DhcpOption, IpPool, MessageType, OpCode};
 
 #[test]
 fn test_dhcp_config_default() {

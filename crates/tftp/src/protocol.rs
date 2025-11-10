@@ -103,7 +103,7 @@ impl TftpOpcode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpOpcode;
+    /// use tftp::TftpOpcode;
     ///
     /// assert_eq!(TftpOpcode::from_u16(1), Some(TftpOpcode::ReadRequest));
     /// assert_eq!(TftpOpcode::from_u16(99), None);
@@ -124,7 +124,7 @@ impl TftpOpcode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpOpcode;
+    /// use tftp::TftpOpcode;
     ///
     /// assert_eq!(TftpOpcode::ReadRequest.as_u16(), 1);
     /// assert_eq!(TftpOpcode::Data.as_u16(), 3);
@@ -137,7 +137,7 @@ impl TftpOpcode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpOpcode;
+    /// use tftp::TftpOpcode;
     ///
     /// assert_eq!(TftpOpcode::ReadRequest.name(), "RRQ");
     /// assert_eq!(TftpOpcode::Data.name(), "DATA");
@@ -226,7 +226,7 @@ impl TftpErrorCode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpErrorCode;
+    /// use tftp::TftpErrorCode;
     ///
     /// assert_eq!(TftpErrorCode::from_u16(1), Some(TftpErrorCode::FileNotFound));
     /// assert_eq!(TftpErrorCode::from_u16(99), None);
@@ -250,7 +250,7 @@ impl TftpErrorCode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpErrorCode;
+    /// use tftp::TftpErrorCode;
     ///
     /// assert_eq!(TftpErrorCode::FileNotFound.as_u16(), 1);
     /// assert_eq!(TftpErrorCode::AccessViolation.as_u16(), 2);
@@ -263,7 +263,7 @@ impl TftpErrorCode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpErrorCode;
+    /// use tftp::TftpErrorCode;
     ///
     /// assert_eq!(TftpErrorCode::FileNotFound.default_message(), "File not found");
     /// assert_eq!(TftpErrorCode::AccessViolation.default_message(), "Access violation");
@@ -326,7 +326,7 @@ impl TransferMode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TransferMode;
+    /// use tftp::TransferMode;
     ///
     /// assert_eq!("octet".parse::<TransferMode>(), Ok(TransferMode::Octet));
     /// assert_eq!("NETASCII".parse::<TransferMode>(), Ok(TransferMode::NetAscii));
@@ -344,7 +344,7 @@ impl TransferMode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TransferMode;
+    /// use tftp::TransferMode;
     ///
     /// assert_eq!(TransferMode::Octet.as_str(), "octet");
     /// assert_eq!(TransferMode::NetAscii.as_str(), "netascii");
@@ -362,7 +362,7 @@ impl TransferMode {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TransferMode;
+    /// use tftp::TransferMode;
     ///
     /// assert!(TransferMode::Octet.is_supported());
     /// assert!(!TransferMode::NetAscii.is_supported()); // Limited support
@@ -413,7 +413,7 @@ impl BlockSizeConfig {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::BlockSizeConfig;
+    /// use tftp::BlockSizeConfig;
     ///
     /// let config = BlockSizeConfig::default_size();
     /// assert_eq!(config.size, 512);
@@ -433,7 +433,7 @@ impl BlockSizeConfig {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::BlockSizeConfig;
+    /// use tftp::BlockSizeConfig;
     ///
     /// let config = BlockSizeConfig::from_option("1024");
     /// assert_eq!(config.size, 1024);
@@ -463,7 +463,7 @@ impl BlockSizeConfig {
     /// # Examples
     /// ```
     /// use std::collections::HashMap;
-    /// use pxe_server::tftp::BlockSizeConfig;
+    /// use tftp::BlockSizeConfig;
     ///
     /// let mut options = HashMap::new();
     /// options.insert("blksize".to_string(), "1024".to_string());
@@ -482,7 +482,7 @@ impl BlockSizeConfig {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::BlockSizeConfig;
+    /// use tftp::BlockSizeConfig;
     ///
     /// let default_config = BlockSizeConfig::default_size();
     /// assert!(!default_config.is_negotiated());
@@ -525,7 +525,7 @@ impl TftpRequest {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::{TftpRequest, TransferMode};
+    /// use tftp::{TftpRequest, TransferMode};
     ///
     /// let request = TftpRequest::read_request("boot.img", TransferMode::Octet);
     /// assert_eq!(request.filename, "boot.img");
@@ -544,7 +544,7 @@ impl TftpRequest {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::{TftpRequest, TransferMode};
+    /// use tftp::{TftpRequest, TransferMode};
     ///
     /// let mut request = TftpRequest::read_request("boot.img", TransferMode::Octet);
     /// request.with_option("blksize", "1400");
@@ -560,7 +560,7 @@ impl TftpRequest {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::{TftpRequest, TransferMode};
+    /// use tftp::{TftpRequest, TransferMode};
     ///
     /// let mut request = TftpRequest::read_request("boot.img", TransferMode::Octet);
     /// request.with_option("blksize", "1024");
@@ -587,7 +587,7 @@ impl TftpData {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpData;
+    /// use tftp::TftpData;
     ///
     /// let data = TftpData::new(1, b"Hello, TFTP!");
     /// assert_eq!(data.block, 1);
@@ -606,7 +606,7 @@ impl TftpData {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::{TftpData, BlockSizeConfig};
+    /// use tftp::{TftpData, BlockSizeConfig};
     ///
     /// let small_data = TftpData::new(1, vec![0; 100]);
     /// let large_data = TftpData::new(1, vec![0; 512]);
@@ -632,7 +632,7 @@ impl TftpAck {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpAck;
+    /// use tftp::TftpAck;
     ///
     /// let ack = TftpAck::new(42);
     /// assert_eq!(ack.block, 42);
@@ -645,7 +645,7 @@ impl TftpAck {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::TftpAck;
+    /// use tftp::TftpAck;
     ///
     /// let oack_ack = TftpAck::oack_ack();
     /// assert_eq!(oack_ack.block, 0);
@@ -669,7 +669,7 @@ impl TftpError {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::{TftpError, TftpErrorCode};
+    /// use tftp::{TftpError, TftpErrorCode};
     ///
     /// let error = TftpError::new(TftpErrorCode::FileNotFound, "boot.img not found");
     /// assert_eq!(error.code, TftpErrorCode::FileNotFound);
@@ -686,7 +686,7 @@ impl TftpError {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::{TftpError, TftpErrorCode};
+    /// use tftp::{TftpError, TftpErrorCode};
     ///
     /// let error = TftpError::with_default_message(TftpErrorCode::AccessViolation);
     /// assert_eq!(error.code, TftpErrorCode::AccessViolation);
@@ -700,7 +700,7 @@ impl TftpError {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::{TftpError, TftpErrorCode};
+    /// use tftp::{TftpError, TftpErrorCode};
     ///
     /// let error = TftpError::file_not_found();
     /// assert_eq!(error.code, TftpErrorCode::FileNotFound);
@@ -713,7 +713,7 @@ impl TftpError {
     ///
     /// # Examples
     /// ```
-    /// use pxe_server::tftp::{TftpError, TftpErrorCode};
+    /// use tftp::{TftpError, TftpErrorCode};
     ///
     /// let error = TftpError::access_violation();
     /// assert_eq!(error.code, TftpErrorCode::AccessViolation);

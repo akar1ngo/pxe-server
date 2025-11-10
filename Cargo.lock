@@ -71,6 +71,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
+name = "dhcp"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "socket2",
+ "tempfile",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "errno"
 version = "0.3.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -218,14 +229,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "proxy-dhcp"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dhcp",
+ "socket2",
+ "tempfile",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "pxe-server"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "argh",
+ "dhcp",
  "nix",
+ "proxy-dhcp",
  "socket2",
  "tempfile",
+ "tftp",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -366,6 +392,17 @@ dependencies = [
  "once_cell",
  "rustix",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "tftp"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "socket2",
+ "tempfile",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]

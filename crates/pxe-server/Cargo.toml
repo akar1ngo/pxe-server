@@ -1,0 +1,20 @@
+[package]
+name = "pxe-server"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow.workspace = true
+argh.workspace = true
+nix.workspace = true
+socket2.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+# Local dependency
+dhcp = { path = "../dhcp" }
+proxy-dhcp = { path = "../proxy-dhcp" }
+tftp = { path = "../tftp" }
+
+[dev-dependencies]
+tempfile.workspace = true

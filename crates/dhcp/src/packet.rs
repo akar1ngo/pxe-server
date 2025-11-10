@@ -5,7 +5,7 @@
 
 use std::net::Ipv4Addr;
 
-use crate::dhcp::{DhcpOption, HardwareType, MessageType, OpCode};
+use crate::{DhcpOption, HardwareType, MessageType, OpCode};
 
 /// DHCP packet structure as defined in RFC 2131
 #[derive(Debug, Clone)]

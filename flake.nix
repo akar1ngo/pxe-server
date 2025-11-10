@@ -101,10 +101,6 @@
           packages = [
             # pkgs.ripgrep
             nightly-tools
-            pkgs.go
-            pkgs.gopls
-            pkgs.golangci-lint
-            pkgs.golangci-lint-langserver
           ];
         };
       }

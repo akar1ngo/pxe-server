@@ -8,12 +8,11 @@ use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, UdpSocket as StdUdpSocket};
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
+use dhcp::packet::DhcpPacket;
+use dhcp::{DhcpOption, MessageType, OpCode};
 use socket2::{Domain, Protocol, Socket, Type};
 use tokio::net::UdpSocket;
 use tracing::{debug, info, warn};
-
-use crate::dhcp::packet::DhcpPacket;
-use crate::dhcp::{DhcpOption, MessageType, OpCode};
 
 /// Configuration for the Proxy DHCP server
 #[derive(Clone, Debug)]
@@ -464,8 +463,9 @@ pub async fn spawn_proxy_dhcp_server(config: ProxyConfig) -> Result<()> {
 
 #[cfg(test)]
 pub mod tests {
+    use dhcp::{DhcpOption, HardwareType, MessageType, OpCode};
+
     use super::*;
-    use crate::dhcp::{DhcpOption, HardwareType, MessageType, OpCode};
 
     /// Create a mock ProxyDhcpServer for testing (without actual sockets)
     pub fn create_test_server(config: ProxyConfig) -> ProxyDhcpServer {

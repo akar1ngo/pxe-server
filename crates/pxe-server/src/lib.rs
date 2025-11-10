@@ -20,7 +20,7 @@
 //!   - Integration with existing DHCP servers
 //!
 
-pub mod dhcp;
-pub mod proxy_dhcp;
-pub mod tftp;
 pub mod util;
+
+// Re-export the crates for easier access
+pub use {dhcp, proxy_dhcp, tftp};

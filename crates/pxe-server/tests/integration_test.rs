@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 // Import the main server functions from the new modular structure
-use pxe_server::tftp::{TftpServer, TftpServerConfig, run_tftp_server};
+use tftp::{TftpServer, TftpServerConfig, run_tftp_server};
 use tempfile::tempdir;
 use tokio::fs;
 use tokio::net::UdpSocket;
@@ -75,7 +75,7 @@ async fn test_tftp_server_struct() {
 #[tokio::test]
 async fn test_tftp_packet_parsing() {
     // Test RRQ parsing using the new modular functions
-    use pxe_server::tftp::{TftpOpcode, parse_rrq};
+    use tftp::{TftpOpcode, parse_rrq};
 
     // Create a valid RRQ packet
     let mut rrq = Vec::new();
@@ -96,7 +96,7 @@ async fn test_tftp_packet_building() {
     // Test packet building functions
     use std::collections::HashMap;
 
-    use pxe_server::tftp::{TftpErrorCode, TftpOpcode, build_ack, build_data, build_error, build_oack};
+    use tftp::{TftpErrorCode, TftpOpcode, build_ack, build_data, build_error, build_oack};
 
     // Test DATA packet
     let data_packet = build_data(1, b"Hello, TFTP!");
@@ -232,7 +232,7 @@ async fn test_file_operations() {
 
 #[test]
 fn test_tftp_mode_validation() {
-    use pxe_server::tftp::TransferMode;
+    use tftp::TransferMode;
 
     // Test supported modes
     assert_eq!(TransferMode::from_str_opt("octet"), Some(TransferMode::Octet));
@@ -257,7 +257,7 @@ fn test_tftp_mode_validation() {
 
 #[test]
 fn test_netascii_conversion() {
-    use pxe_server::tftp::{convert_from_netascii, convert_to_netascii};
+    use tftp::{convert_from_netascii, convert_to_netascii};
 
     // Test basic conversion
     let input = b"Hello\nWorld\r";
@@ -282,7 +282,7 @@ fn test_netascii_conversion() {
 fn test_block_size_parsing() {
     use std::collections::HashMap;
 
-    use pxe_server::tftp::BlockSizeConfig;
+    use tftp::BlockSizeConfig;
 
     let mut options = HashMap::new();
 
@@ -310,7 +310,7 @@ fn test_block_size_parsing() {
 async fn test_transfer_config() {
     use std::time::Duration;
 
-    use pxe_server::tftp::{BlockSizeConfig, TransferConfig};
+    use tftp::{BlockSizeConfig, TransferConfig};
 
     let config = TransferConfig::default();
     assert_eq!(config.block_size.size, BlockSizeConfig::DEFAULT);

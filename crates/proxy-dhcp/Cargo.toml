@@ -1,0 +1,14 @@
+[package]
+name = "proxy-dhcp"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow.workspace = true
+socket2.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+dhcp = { path = "../dhcp" }
+
+[dev-dependencies]
+tempfile.workspace = true

@@ -22,7 +22,7 @@
 //! # Basic Server Usage
 //!
 //! ```rust,no_run
-//! use pxe_server::tftp::{run_tftp_server, TftpServer, TftpServerConfig};
+//! use tftp::{run_tftp_server, TftpServer, TftpServerConfig};
 //! use std::path::PathBuf;
 //!
 //! #[tokio::main]
@@ -48,11 +48,11 @@
 //! # Working with Protocol Types
 //!
 //! ```rust
-//! use pxe_server::tftp::{TftpOpcode, TftpErrorCode, TransferMode, BlockSizeConfig};
+//! use tftp::{TftpOpcode, TftpErrorCode, TransferMode, BlockSizeConfig, TftpRequest, TftpError};
 //! use std::collections::HashMap;
 //!
 //! // Create a read request
-//! let mut request = pxe_server::tftp::TftpRequest::read_request("boot.img", TransferMode::Octet);
+//! let mut request = TftpRequest::read_request("boot.img", TransferMode::Octet);
 //! request.with_option("blksize", "1400");
 //!
 //! // Work with opcodes
@@ -71,7 +71,7 @@
 //! assert!(block_config.is_negotiated());
 //!
 //! // Create error responses
-//! let error = pxe_server::tftp::TftpError::file_not_found();
+//! let error = TftpError::file_not_found();
 //! assert_eq!(error.code, TftpErrorCode::FileNotFound);
 //! ```
 //!

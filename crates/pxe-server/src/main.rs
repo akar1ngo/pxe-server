@@ -7,10 +7,10 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use argh::FromArgs;
+use dhcp::{spawn_dhcp_server, DhcpConfig};
 use nix::net::if_::if_nametoindex;
-use pxe_server::dhcp::{DhcpConfig, spawn_dhcp_server};
-use pxe_server::proxy_dhcp::{ProxyConfig, spawn_proxy_dhcp_server};
-use pxe_server::tftp::run_tftp_server;
+use proxy_dhcp::{spawn_proxy_dhcp_server, ProxyConfig};
+use tftp::run_tftp_server;
 
 const DEFAULT_BIND: &str = "0.0.0.0:6969"; // use 6969 for non-root testing; redirect or run as root for :69
 const DEFAULT_ROOT: &str = "./tftp_root";

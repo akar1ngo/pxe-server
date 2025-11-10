@@ -5,9 +5,10 @@
 
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 
+use dhcp::packet::DhcpPacket;
+use dhcp::{DhcpOption, HardwareType, MessageType, OpCode};
+
 use super::*;
-use crate::dhcp::packet::DhcpPacket;
-use crate::dhcp::{DhcpOption, HardwareType, MessageType, OpCode};
 
 /// Create a test PXE DISCOVER request packet for BIOS clients
 fn create_bios_discover_request() -> DhcpPacket {

@@ -9,8 +9,8 @@ use std::path::PathBuf;
 use anyhow::{Context, Result};
 use tokio::net::UdpSocket;
 
-use crate::tftp::protocol::{TftpOpcode, get_tftp_opcode, parse_rrq};
-use crate::tftp::transfer::{TransferConfig, handle_read_request};
+use crate::protocol::{TftpOpcode, get_tftp_opcode, parse_rrq};
+use crate::transfer::{TransferConfig, handle_read_request};
 
 /// TFTP Server configuration
 #[derive(Debug, Clone)]

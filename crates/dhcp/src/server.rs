@@ -13,8 +13,8 @@ use anyhow::{Context, Result};
 use socket2::{Domain, Protocol, Socket, Type};
 use tokio::net::UdpSocket as TokioUdpSocket;
 
-use crate::dhcp::packet::DhcpPacket;
-use crate::dhcp::{DhcpOption, IpPool, MessageType, create_pxe_vendor_options};
+use crate::packet::DhcpPacket;
+use crate::{DhcpOption, IpPool, MessageType, create_pxe_vendor_options};
 
 /// Configuration for the DHCP server
 #[derive(Debug, Clone)]

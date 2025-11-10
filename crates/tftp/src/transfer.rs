@@ -12,7 +12,7 @@ use anyhow::{Context, Result, anyhow};
 use tokio::net::UdpSocket;
 use tokio::time::timeout;
 
-use crate::tftp::protocol::{
+use crate::protocol::{
     BlockSizeConfig, TftpErrorCode, TftpOpcode, TransferMode, build_data, build_error, build_oack, get_tftp_opcode,
     parse_ack, parse_error,
 };
