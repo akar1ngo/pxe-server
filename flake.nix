@@ -33,74 +33,57 @@
 
         craneLib = (crane.mkLib pkgs).overrideToolchain (
           p:
-          p.rust-bin.stable.latest.minimal.override {
-            extensions = [
-              "clippy"
-              "rust-docs"
-              "rust-src"
-            ];
-          }
+          p.rust-bin.selectLatestNightlyWith (
+            toolchain:
+            toolchain.default.override {
+              extensions = [
+                "clippy"
+                "rust-analyzer"
+                "rust-docs"
+                "rust-src"
+                "rustfmt"
+              ];
+            }
+          )
         );
 
-        # Nightly rust-analyzer and rustfmt. Used alongside stable toolchain.
-        nightly-tools = pkgs.rust-bin.selectLatestNightlyWith (
-          toolchain:
-          toolchain.minimal.override {
-            extensions = [
-              "rust-analyzer"
-              "rustfmt"
-            ];
-          }
-        );
+        src = craneLib.cleanCargoSource ./.;
 
         # Common arguments can be set here to avoid repeating them later
         # Note: changes here will rebuild all dependency crates
         commonArgs = {
-          src = craneLib.cleanCargoSource ./.;
+          inherit src;
           strictDeps = true;
-
-          buildInputs = [
-            # Add additional build inputs here
-          ]
-          ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
-            # Additional darwin specific inputs can be set here
-            pkgs.libiconv
-          ];
+          cargoExtraArgs = ''-Z build-std-features="optimize_for_size"'';
         };
 
-        my-crate = craneLib.buildPackage (
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
+        pxe-server = craneLib.buildPackage (
           commonArgs
           // {
-            cargoArtifacts = craneLib.buildDepsOnly commonArgs;
-
-            # Additional environment variables or build phases/hooks can be set
-            # here *without* rebuilding all dependency crates
-            # MY_CUSTOM_VAR = "some value";
+            inherit cargoArtifacts;
+            inherit (craneLib.crateNameFromCargoToml { inherit src; }) version;
           }
         );
       in
       {
         checks = {
-          inherit my-crate;
+          inherit pxe-server;
         };
 
-        packages.default = my-crate;
+        packages.default = pxe-server;
 
         apps.default = flake-utils.lib.mkApp {
-          drv = my-crate;
+          drv = pxe-server;
         };
 
         devShells.default = craneLib.devShell {
           # Inherit inputs from checks.
           checks = self.checks.${system};
 
-          # Additional dev-shell environment variables can be set directly
-          # MY_CUSTOM_DEVELOPMENT_VAR = "something else";
-
-          # Extra inputs can be added here; cargo and rustc are provided by default.
           packages = [
-            # pkgs.ripgrep
-            nightly-tools
+            pkgs.cargo-hakari
           ];
         };
       }
