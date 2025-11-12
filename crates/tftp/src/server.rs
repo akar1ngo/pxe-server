@@ -13,7 +13,6 @@ use crate::protocol::{TftpOpcode, get_tftp_opcode, parse_rrq};
 use crate::transfer::{TransferConfig, handle_read_request};
 
 /// TFTP Server configuration
-#[derive(Debug, Clone)]
 pub struct TftpServerConfig {
     pub bind_address: String,
     pub root_directory: PathBuf,

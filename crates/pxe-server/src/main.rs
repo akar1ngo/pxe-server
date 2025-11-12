@@ -7,16 +7,15 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use argh::FromArgs;
-use dhcp::{spawn_dhcp_server, DhcpConfig};
+use dhcp::{DhcpConfig, spawn_dhcp_server};
 use nix::net::if_::if_nametoindex;
-use proxy_dhcp::{spawn_proxy_dhcp_server, ProxyConfig};
+use proxy_dhcp::{ProxyConfig, spawn_proxy_dhcp_server};
 use tftp::run_tftp_server;
 
 const DEFAULT_BIND: &str = "0.0.0.0:6969"; // use 6969 for non-root testing; redirect or run as root for :69
 const DEFAULT_ROOT: &str = "./tftp_root";
 
 /// Configuration for the TFTP service
-#[derive(Debug, Clone)]
 pub struct TftpServiceConfig {
     pub enabled: bool,
     pub bind_address: String,
@@ -25,7 +24,6 @@ pub struct TftpServiceConfig {
 }
 
 /// Configuration for the ProxyDHCP service
-#[derive(Debug, Clone)]
 pub struct ProxyDhcpServiceConfig {
     pub enabled: bool,
     pub bind_address: String,
@@ -35,7 +33,6 @@ pub struct ProxyDhcpServiceConfig {
 }
 
 /// Configuration for the DHCP service
-#[derive(Debug, Clone)]
 pub struct DhcpServiceConfig {
     pub enabled: bool,
     pub bind_address: String,
@@ -50,7 +47,6 @@ pub struct DhcpServiceConfig {
 }
 
 /// Complete service configuration
-#[derive(Debug, Clone)]
 pub struct ServiceConfig {
     pub interface: String,
     pub tftp: TftpServiceConfig,
@@ -340,20 +336,26 @@ impl ServiceManager {
                 self.config.tftp.root_directory.display()
             );
 
+            // FIXME: cloning the string while borrow is possible, so that we can log below
+            let bind_addr = self.config.tftp.bind_address.clone();
+
             services.push(Box::new(TftpService {
-                config: self.config.tftp.clone(),
+                config: self.config.tftp,
             }));
-            service_descriptions.push(format!("TFTP on {}", self.config.tftp.bind_address));
+            service_descriptions.push(format!("TFTP on {bind_addr}"));
         }
 
         // Add ProxyDHCP service if enabled
         if self.config.proxy_dhcp.enabled {
             tracing::info!("Starting ProxyDHCP server on {}", self.config.proxy_dhcp.bind_address);
 
+            // FIXME: cloning the string while borrow is possible, so that we can log below
+            let bind_addr = self.config.proxy_dhcp.bind_address.clone();
+
             services.push(Box::new(ProxyDhcpService {
-                config: self.config.proxy_dhcp.clone(),
+                config: self.config.proxy_dhcp,
             }));
-            service_descriptions.push(format!("ProxyDHCP on {}", self.config.proxy_dhcp.bind_address));
+            service_descriptions.push(format!("ProxyDHCP on {bind_addr}"));
         }
 
         // Add DHCP service if enabled
@@ -365,10 +367,13 @@ impl ServiceManager {
                 self.config.dhcp.pool_end
             );
 
+            // FIXME: cloning the string while borrow is possible, so that we can log below
+            let bind_addr = self.config.dhcp.bind_address.clone();
+
             services.push(Box::new(DhcpService {
-                config: self.config.dhcp.clone(),
+                config: self.config.dhcp,
             }));
-            service_descriptions.push(format!("DHCP on {}", self.config.dhcp.bind_address));
+            service_descriptions.push(format!("DHCP on {bind_addr}"));
         }
 
         tracing::info!(

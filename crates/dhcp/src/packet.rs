@@ -8,7 +8,6 @@ use std::net::Ipv4Addr;
 use crate::{DhcpOption, HardwareType, MessageType, OpCode};
 
 /// DHCP packet structure as defined in RFC 2131
-#[derive(Debug, Clone)]
 pub struct DhcpPacket {
     pub op: OpCode,
     pub htype: HardwareType,

@@ -7,7 +7,7 @@
 use std::collections::HashMap;
 use std::net::{Ipv4Addr, SocketAddr, UdpSocket};
 use std::sync::{Arc, Mutex};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use anyhow::{Context, Result};
 use socket2::{Domain, Protocol, Socket, Type};
@@ -17,7 +17,6 @@ use crate::packet::DhcpPacket;
 use crate::{DhcpOption, IpPool, MessageType, create_pxe_vendor_options};
 
 /// Configuration for the DHCP server
-#[derive(Debug, Clone)]
 pub struct DhcpConfig {
     /// Address to bind the DHCP server to
     pub bind: String,
@@ -77,21 +76,21 @@ impl Default for DhcpConfig {
 
 /// DHCP Server state
 struct DhcpServerState {
-    config: DhcpConfig,
+    config: Arc<DhcpConfig>,
     ip_pool: IpPool,
     leases: HashMap<[u8; 6], LeaseInfo>,
 }
 
 /// Information about an IP address lease
-#[derive(Debug, Clone)]
 struct LeaseInfo {
     ip: Ipv4Addr,
-    expires_at: std::time::Instant,
+    expires_at: Instant,
 }
 
 impl DhcpServerState {
     fn new(config: DhcpConfig) -> Self {
         let ip_pool = IpPool::new(config.pool_start, config.pool_end);
+        let config = Arc::new(config);
 
         Self {
             config,

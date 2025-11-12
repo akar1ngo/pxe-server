@@ -15,7 +15,6 @@ use tokio::net::UdpSocket;
 use tracing::{debug, info, warn};
 
 /// Configuration for the Proxy DHCP server
-#[derive(Clone, Debug)]
 pub struct ProxyConfig {
     /// Bind address (default "0.0.0.0:4011")
     pub bind: String,
