@@ -28,7 +28,6 @@ pub struct ProxyDhcpServiceConfig {
     pub enabled: bool,
     pub bind_address: String,
     pub tftp_server: std::net::Ipv4Addr,
-    pub bios_bootfile: String,
     pub efi_bootfile: String,
 }
 
@@ -42,7 +41,6 @@ pub struct DhcpServiceConfig {
     pub router: std::net::Ipv4Addr,
     pub dns_server: std::net::Ipv4Addr,
     pub tftp_server: std::net::Ipv4Addr,
-    pub bios_bootfile: String,
     pub efi_bootfile: String,
 }
 
@@ -143,17 +141,6 @@ struct CliConfig {
     #[argh(option, description = "dns server", default = "\"8.8.8.8\".to_string()")]
     dns: String,
 
-    //
-    // Boot files
-    //
-    #[argh(
-        option,
-        short = 'b',
-        description = "bios boot file",
-        default = "\"pxelinux.0\".to_string()"
-    )]
-    bios: String,
-
     #[argh(
         option,
         short = 'e',
@@ -181,7 +168,6 @@ impl CliConfig {
             enabled: !self.disable_proxy_dhcp,
             bind_address: format!("{}:4011", self.proxy),
             tftp_server: tftp_ip,
-            bios_bootfile: self.bios.clone(),
             efi_bootfile: self.efi.clone(),
         };
 
@@ -209,7 +195,6 @@ impl CliConfig {
                 .parse()
                 .with_context(|| format!("Invalid DNS server IP: {}", self.dns))?,
             tftp_server: tftp_ip,
-            bios_bootfile: self.bios,
             efi_bootfile: self.efi,
         };
 
@@ -263,7 +248,6 @@ impl Service for ProxyDhcpService {
         let proxy_config = ProxyConfig {
             bind: config.bind_address,
             tftp_server: config.tftp_server,
-            bios_bootfile: config.bios_bootfile,
             efi_bootfile: config.efi_bootfile,
             server_identifier: Some(config.tftp_server),
         };
@@ -293,7 +277,6 @@ impl Service for DhcpService {
             domain_name: Some("local".to_string()),
             server_identifier: config.tftp_server,
             tftp_server: config.tftp_server,
-            bios_bootfile: config.bios_bootfile,
             efi_bootfile: config.efi_bootfile,
             lease_time: 3600,
         };

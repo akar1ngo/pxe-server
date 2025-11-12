@@ -20,8 +20,6 @@ pub struct ProxyConfig {
     pub bind: String,
     /// IP address of the TFTP server to advertise
     pub tftp_server: Ipv4Addr,
-    /// Boot file for legacy/BIOS PXE clients
-    pub bios_bootfile: String,
     /// Boot file for UEFI PXE clients
     pub efi_bootfile: String,
     /// Optionally override the server identifier option (option 54)
@@ -34,7 +32,6 @@ impl Default for ProxyConfig {
         Self {
             bind: "0.0.0.0:4011".to_string(),
             tftp_server: Ipv4Addr::new(192, 168, 1, 1),
-            bios_bootfile: "pxelinux.0".to_string(),
             efi_bootfile: "ipxe.efi".to_string(),
             server_identifier: None,
         }
@@ -289,22 +286,9 @@ impl ProxyDhcpServer {
     }
 
     /// Determine the appropriate boot file for the client
-    pub fn determine_bootfile(&self, request: &DhcpPacket) -> String {
-        if let Some(vendor_class_data) = request.get_option(DhcpOption::VendorClassIdentifier as u8) {
-            let vendor_class = String::from_utf8_lossy(&vendor_class_data);
-
-            // Check for UEFI indicators
-            if vendor_class.to_uppercase().contains("EFI") ||
-               vendor_class.contains("Arch:00007") ||  // EFI x64
-               vendor_class.contains("Arch:00009")
-            // EFI x64 alternative
-            {
-                return self.config.efi_bootfile.clone();
-            }
-        }
-
-        // Default to BIOS boot file
-        self.config.bios_bootfile.clone()
+    pub fn determine_bootfile(&self, _request: &DhcpPacket) -> String {
+        // TODO: Allow user configuration to dispatch on vendor and provide specific binaries.
+        self.config.efi_bootfile.to_owned()
     }
 
     /// Create a DHCP Offer response
@@ -505,24 +489,8 @@ pub mod tests {
         let config = ProxyConfig::default();
         assert_eq!(config.bind, "0.0.0.0:4011");
         assert_eq!(config.tftp_server, Ipv4Addr::new(192, 168, 1, 1));
-        assert_eq!(config.bios_bootfile, "pxelinux.0");
         assert_eq!(config.efi_bootfile, "ipxe.efi");
         assert_eq!(config.server_identifier, None);
-    }
-
-    #[tokio::test]
-    async fn test_determine_bootfile_bios() {
-        let config = ProxyConfig::default();
-        let server = create_test_server(config);
-
-        let mut request = create_test_request();
-        request.add_string_option(
-            DhcpOption::VendorClassIdentifier as u8,
-            "PXEClient:Arch:00000:UNDI:002001",
-        );
-
-        let bootfile = server.determine_bootfile(&request);
-        assert_eq!(bootfile, "pxelinux.0");
     }
 
     #[tokio::test]
@@ -554,7 +522,7 @@ pub mod tests {
     async fn test_create_offer() {
         let config = ProxyConfig {
             tftp_server: Ipv4Addr::new(192, 168, 1, 10),
-            bios_bootfile: "test.0".to_string(),
+            efi_bootfile: "test.0".to_string(),
             ..Default::default()
         };
 

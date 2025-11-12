@@ -63,20 +63,12 @@ fn test_pxe_client_detection() {
     // Non-PXE client
     assert!(!packet.is_pxe_client());
 
-    // PXE BIOS client
-    packet.add_string_option(
-        DhcpOption::VendorClassIdentifier as u8,
-        "PXEClient:Arch:00000:UNDI:002001",
-    );
-    assert!(packet.is_pxe_client());
-
     // PXE UEFI client
-    let mut packet2 = DhcpPacket::new();
-    packet2.add_string_option(
+    packet.add_string_option(
         DhcpOption::VendorClassIdentifier as u8,
         "PXEClient:Arch:00007:UNDI:003000",
     );
-    assert!(packet2.is_pxe_client());
+    assert!(packet.is_pxe_client());
 }
 
 #[test]
@@ -327,14 +319,6 @@ fn test_broadcast_flag_handling() {
 
 #[test]
 fn test_pxe_architecture_detection() {
-    // Test BIOS client
-    let mut bios_packet = DhcpPacket::new();
-    bios_packet.add_string_option(
-        DhcpOption::VendorClassIdentifier as u8,
-        "PXEClient:Arch:00000:UNDI:002001",
-    );
-    assert!(bios_packet.is_pxe_client());
-
     // Test UEFI x64 client
     let mut uefi_packet = DhcpPacket::new();
     uefi_packet.add_string_option(
@@ -382,28 +366,4 @@ async fn test_dhcp_server_bind_error() {
 
     // Should either timeout or return an error
     assert!(result.is_err() || result.unwrap().is_err());
-}
-
-#[test]
-fn test_dhcp_config_validation() {
-    let config = DhcpConfig {
-        bind: "127.0.0.1:6067".to_string(),
-        pool_start: Ipv4Addr::new(10, 0, 1, 100),
-        pool_end: Ipv4Addr::new(10, 0, 1, 200),
-        subnet_mask: Ipv4Addr::new(255, 255, 255, 0),
-        router: Ipv4Addr::new(10, 0, 1, 1),
-        dns_server: Ipv4Addr::new(8, 8, 8, 8),
-        server_identifier: Ipv4Addr::new(10, 0, 1, 1),
-        tftp_server: Ipv4Addr::new(10, 0, 1, 1),
-        bios_bootfile: "pxelinux.0".to_string(),
-        efi_bootfile: "bootx64.efi".to_string(),
-        lease_time: 7200,
-        domain_name: Some("example.com".to_string()),
-    };
-
-    // Verify all fields are set correctly
-    assert_eq!(config.lease_time, 7200);
-    assert_eq!(config.domain_name.as_ref().unwrap(), "example.com");
-    assert_eq!(config.bios_bootfile, "pxelinux.0");
-    assert_eq!(config.efi_bootfile, "bootx64.efi");
 }

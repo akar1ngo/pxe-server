@@ -45,9 +45,6 @@ pub struct DhcpConfig {
     /// TFTP server IP for PXE boot
     pub tftp_server: Ipv4Addr,
 
-    /// Boot filename for BIOS clients
-    pub bios_bootfile: String,
-
     /// Boot filename for UEFI clients
     pub efi_bootfile: String,
 
@@ -67,7 +64,6 @@ impl Default for DhcpConfig {
             domain_name: Some("local".to_string()),
             server_identifier: Ipv4Addr::new(192, 168, 1, 1),
             tftp_server: Ipv4Addr::new(192, 168, 1, 1),
-            bios_bootfile: "pxelinux.0".to_string(),
             efi_bootfile: "ipxe.efi".to_string(),
             lease_time: 3600, // 1 hour
         }
@@ -591,21 +587,9 @@ impl DhcpServer {
     }
 
     /// Determine the appropriate boot file for a PXE client
-    fn determine_bootfile(&self, request: &DhcpPacket, config: &DhcpConfig) -> String {
-        // Try to determine client architecture from vendor class identifier
-        if let Some(vendor_class) = request.get_option(DhcpOption::VendorClassIdentifier as u8) {
-            let vendor_str = String::from_utf8_lossy(&vendor_class);
-
-            // Parse architecture from PXEClient string
-            // Format: PXEClient:Arch:XXXXX:UNDI:YYYYYY
-            if vendor_str.contains(":Arch:00007:") || vendor_str.contains(":Arch:00009:") {
-                // UEFI x64 or EFI BC
-                return config.efi_bootfile.clone();
-            }
-        }
-
-        // Default to BIOS boot file
-        config.bios_bootfile.clone()
+    fn determine_bootfile(&self, _request: &DhcpPacket, config: &DhcpConfig) -> String {
+        // TODO: Allow user configuration to dispatch on vendor and provide specific binaries.
+        config.efi_bootfile.to_owned()
     }
 
     /// Send a DHCP response packet

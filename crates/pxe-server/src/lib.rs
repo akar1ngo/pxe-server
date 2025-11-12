@@ -15,7 +15,7 @@
 //!   - Concurrent transfers
 //!
 //! - **ProxyDHCP Server**: PXE boot support
-//!   - BIOS and UEFI boot file serving
+//!   - EFI boot file serving
 //!   - Vendor class identification
 //!   - Integration with existing DHCP servers
 //!
