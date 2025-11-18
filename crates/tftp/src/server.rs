@@ -22,7 +22,7 @@ pub struct TftpServerConfig {
 impl Default for TftpServerConfig {
     fn default() -> Self {
         Self {
-            bind_address: "0.0.0.0:6969".to_string(),
+            bind_address: "0.0.0.0:69".to_string(),
             root_directory: PathBuf::from("./tftp_root"),
             transfer_config: TransferConfig::default(),
         }
@@ -171,14 +171,14 @@ mod tests {
     #[test]
     fn test_tftp_server_config_default() {
         let config = TftpServerConfig::default();
-        assert_eq!(config.bind_address, "0.0.0.0:6969");
+        assert_eq!(config.bind_address, "0.0.0.0:69");
         assert_eq!(config.root_directory, PathBuf::from("./tftp_root"));
     }
 
     #[test]
     fn test_tftp_server_creation() {
         let server = TftpServer::with_defaults();
-        assert_eq!(server.config().bind_address, "0.0.0.0:6969");
+        assert_eq!(server.config().bind_address, "0.0.0.0:69");
         assert!(server.local_addr().is_none()); // Not bound yet
 
         let custom_server = TftpServer::with_config("127.0.0.1:9999".to_string(), PathBuf::from("/tmp/tftp"));

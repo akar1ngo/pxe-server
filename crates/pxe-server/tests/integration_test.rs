@@ -5,9 +5,9 @@
 use std::path::PathBuf;
 use std::time::Duration;
 
+use tempfile::tempdir;
 // Import the main server functions from the new modular structure
 use tftp::{TftpServer, TftpServerConfig, run_tftp_server};
-use tempfile::tempdir;
 use tokio::fs;
 use tokio::net::UdpSocket;
 use tokio::time::{sleep, timeout};
@@ -335,7 +335,7 @@ async fn test_transfer_config() {
 #[test]
 fn test_tftp_server_config() {
     let config = TftpServerConfig::default();
-    assert_eq!(config.bind_address, "0.0.0.0:6969");
+    assert_eq!(config.bind_address, "0.0.0.0:69");
     assert_eq!(config.root_directory, PathBuf::from("./tftp_root"));
 
     let custom_server = TftpServer::with_config("127.0.0.1:9999".to_string(), PathBuf::from("/custom/root"));

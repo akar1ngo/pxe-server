@@ -12,7 +12,7 @@ use nix::net::if_::if_nametoindex;
 use proxy_dhcp::{ProxyConfig, spawn_proxy_dhcp_server};
 use tftp::run_tftp_server;
 
-const DEFAULT_BIND: &str = "0.0.0.0:6969"; // use 6969 for non-root testing; redirect or run as root for :69
+const DEFAULT_BIND: &str = "0.0.0.0:69";
 const DEFAULT_ROOT: &str = "./tftp_root";
 
 /// Configuration for the TFTP service
